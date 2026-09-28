@@ -47,3 +47,7 @@ python3 -m http.server 8000
 ## Déploiement
 
 Site statique publié par GitHub Pages depuis la branche `main`.
+
+Après chaque modification de `style.css` ou `game.js`, changer le paramètre `?v=`
+des liens dans `index.html` pour que les navigateurs rechargent les fichiers
+au lieu d'utiliser leur cache.
