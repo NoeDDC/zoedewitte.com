@@ -1213,13 +1213,36 @@
     const sc = score();
     const text = `J'ai fait ${sc} points à Dino Rêveur 🦖, le jeu proposé par Zoé Dewitte ! Tu fais mieux ?`;
     const url = location.origin + location.pathname;
-    try {
-      if (navigator.share) { await navigator.share({ title: 'Dino Rêveur', text, url }); return; }
-      await navigator.clipboard.writeText(`${text} ${url}`);
-      toast('📋', 'Texte copié, il n\'y a plus qu\'à le coller !');
-    } catch (e) {
-      if (e && e.name !== 'AbortError') toast('😕', 'Impossible de partager ici');
+    const full = `${text} ${url}`;
+
+    // 1. Feuille de partage native (mobile, HTTPS)
+    if (navigator.share) {
+      try { await navigator.share({ title: 'Dino Rêveur', text, url }); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; }
     }
+    // 2. Presse-papier moderne (HTTPS)
+    if (navigator.clipboard && window.isSecureContext) {
+      try { await navigator.clipboard.writeText(full); toast('📋', 'Texte copié, il n\'y a plus qu\'à le coller !'); return; }
+      catch (e) { /* on tente la méthode suivante */ }
+    }
+    // 3. Copie à l'ancienne, qui marche aussi en HTTP
+    if (legacyCopy(full)) { toast('📋', 'Texte copié, il n\'y a plus qu\'à le coller !'); return; }
+    // 4. Dernier recours : afficher le texte à copier à la main
+    window.prompt('Copiez ce texte pour partager votre score :', full);
+  }
+
+  function legacyCopy(str) {
+    const ta = document.createElement('textarea');
+    ta.value = str;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, str.length);
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    ta.remove();
+    return ok;
   }
 
   const soundBtn = $('#soundBtn');
