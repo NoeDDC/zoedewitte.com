@@ -1191,12 +1191,12 @@
       b.className = 'skin' + (s.id === skinId ? ' sel' : '');
       b.disabled = locked;
       b.setAttribute('aria-pressed', s.id === skinId);
-      b.innerHTML = `<canvas width="152" height="108"></canvas><span class="s-name">${esc(s.name)}</span><span class="s-need">${locked ? `record ≥ ${fmt(s.need)}` : s.id === skinId ? 'choisi' : 'disponible'}</span>${locked ? '<span class="lock" aria-hidden="true">🔒</span>' : ''}`;
+      b.innerHTML = `<canvas width="160" height="136"></canvas><span class="s-name">${esc(s.name)}</span><span class="s-need">${locked ? `record ≥ ${fmt(s.need)}` : s.id === skinId ? 'choisi' : 'disponible'}</span>${locked ? '<span class="lock" aria-hidden="true">🔒</span>' : ''}`;
       const c = b.querySelector('canvas').getContext('2d');
       c.scale(2, 2);
       c.fillStyle = 'rgba(40,30,70,0.12)';
-      c.beginPath(); c.ellipse(38, 49, 20, 3, 0, 0, Math.PI * 2); c.fill();
-      drawDino(c, 17, 49, s, 'stand', 0, false);
+      c.beginPath(); c.ellipse(41, 63, 20, 3, 0, 0, Math.PI * 2); c.fill();
+      drawDino(c, 20, 63, s, 'stand', 0, false);
       b.addEventListener('click', () => {
         skinId = s.id;
         store.set('skin', skinId);

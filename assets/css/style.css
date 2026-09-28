@@ -525,13 +525,13 @@ h1 em {
   transition: transform 0.15s, border-color 0.2s, background 0.2s;
 }
 .skin:hover:not(:disabled) { transform: translateY(-2px); }
-.skin canvas { width: 76px; height: 54px; }
+.skin canvas { width: 80px; height: 68px; }
 .skin .s-name { font-size: 0.76rem; font-weight: 700; }
 .skin .s-need { font-size: 0.68rem; color: var(--muted); }
 .skin.sel { border-color: var(--accent); background: rgba(255, 124, 156, 0.1); }
 .skin:disabled { cursor: not-allowed; }
 .skin:disabled canvas { filter: grayscale(1) brightness(1.1); opacity: 0.35; }
-.skin .lock { position: absolute; top: 24px; left: 50%; transform: translateX(-50%); font-size: 1rem; }
+.skin .lock { position: absolute; top: 34px; left: 50%; transform: translateX(-50%); font-size: 1rem; }
 
 /* footer */
 .footer {
