@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Dino Rêveur — un jeu proposé par Zoé Dewitte</title>
+  <meta name="description" content="Zoé Dewitte vous propose ce jeu : Dino Rêveur, un petit jeu de course où un dinosaure saute par-dessus les cactus, esquive les ptérodactyles et attrape des étoiles.">
+  <meta name="theme-color" content="#fbf6ef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15132a" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="Dino Rêveur — un jeu proposé par Zoé Dewitte">
+  <meta property="og:description" content="Sautez, baissez-vous, attrapez les étoiles et tenez jusqu'à la nuit.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zoedewitte.com/">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Zoé Dewitte — accueil">
+      <span class="mono">z</span><span>zoé dewitte</span>
+    </a>
+    <nav class="nav">
+      <a href="#jeu">Jouer</a>
+      <a href="#defi">Défi du jour</a>
+      <a href="#badges">Badges</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">Zoé Dewitte vous propose ce jeu :</p>
+      <h1>Dino <em>Rêveur</em></h1>
+      <p class="lede">Un petit dinosaure, un grand ciel et des cactus qui n'en finissent pas. Sautez, baissez-vous, attrapez les étoiles… et tenez jusqu'à la tombée de la nuit.</p>
+    </section>
+
+    <section id="jeu" class="game-wrap" aria-label="Le jeu">
+      <div class="stage" id="stage">
+        <canvas id="game" aria-label="Dino Rêveur, zone de jeu"></canvas>
+
+        <div class="toasts" id="toasts" aria-live="polite"></div>
+
+        <div class="overlay start" id="startScreen">
+          <div class="start-card">
+            <div class="press">
+              <kbd class="big-key">Espace</kbd>
+              <span class="touch-label">Touchez l'écran</span>
+            </div>
+            <p class="start-title">pour commencer à courir</p>
+            <p class="start-sub" id="startSub"></p>
+          </div>
+        </div>
+
+        <div class="overlay pause" id="pauseScreen" hidden>
+          <div class="pause-card">
+            <p class="pause-title">Pause</p>
+            <p class="pause-sub">Appuyez sur <kbd>P</kbd> ou touchez pour reprendre</p>
+          </div>
+        </div>
+
+        <div class="overlay over" id="overScreen" hidden>
+          <div class="panel" role="dialog" aria-labelledby="overKicker">
+            <p class="over-kicker" id="overKicker">Aïe, un cactus !</p>
+            <div class="over-score"><span id="overScore">0</span><small>points</small></div>
+            <div class="over-meta">
+              <span>Record <b id="overBest">0</b></span>
+              <span class="dot"></span>
+              <span><i class="star-ico"></i> <b id="overStars">0</b></span>
+            </div>
+            <div class="name-row" id="nameRow" hidden>
+              <label for="nameInput"><span id="overRank">1er</span> au tableau d'honneur</label>
+              <input id="nameInput" maxlength="14" placeholder="Votre prénom" autocomplete="nickname" spellcheck="false">
+            </div>
+            <div class="over-actions">
+              <button class="btn primary" id="againBtn" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.35-5.65M4 4v4.5h4.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Rejouer
+              </button>
+              <button class="btn ghost" id="shareBtn" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Partager
+              </button>
+            </div>
+            <p class="hint">ou appuyez sur <kbd>Espace</kbd></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls-bar">
+        <div class="keys">
+          <span class="k-desk"><kbd>Espace</kbd><kbd>↑</kbd> sauter <em>(maintenir = plus haut)</em></span>
+          <span class="k-desk"><kbd>↓</kbd> se baisser</span>
+          <span class="k-desk"><kbd>P</kbd> pause</span>
+          <span class="k-touch">Touchez pour sauter · glissez vers le bas pour vous baisser</span>
+        </div>
+        <div class="toggles">
+          <button class="icon-btn" id="soundBtn" type="button" aria-label="Couper le son" title="Son">
+            <svg class="on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5H4Z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <svg class="off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5H4Z" fill="currentColor"/><path d="m16 9.5 5 5m0-5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+          <button class="icon-btn" id="pauseBtn" type="button" aria-label="Pause" title="Pause">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1.5" fill="currentColor"/></svg>
+          </button>
+          <button class="icon-btn" id="fsBtn" type="button" aria-label="Plein écran" title="Plein écran">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V5a1 1 0 0 1 1-1h4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="cards">
+      <article class="card daily-card" id="defi">
+        <header class="card-head">
+          <span class="card-ico" aria-hidden="true">☀️</span>
+          <div>
+            <h2>Défi du jour</h2>
+            <p class="card-sub" id="dailyDate"></p>
+          </div>
+        </header>
+        <ul class="objectives" id="dailyList"></ul>
+        <p class="streak" id="streak"></p>
+      </article>
+
+      <article class="card" id="classement">
+        <header class="card-head">
+          <span class="card-ico" aria-hidden="true">🏆</span>
+          <div>
+            <h2>Tableau d'honneur</h2>
+            <p class="card-sub">Vos 5 meilleures courses</p>
+          </div>
+        </header>
+        <ol class="board" id="board"></ol>
+      </article>
+
+      <article class="card" id="stats">
+        <header class="card-head">
+          <span class="card-ico" aria-hidden="true">📊</span>
+          <div>
+            <h2>Statistiques</h2>
+            <p class="card-sub">Depuis votre première partie</p>
+          </div>
+        </header>
+        <div class="stat-grid" id="statGrid"></div>
+      </article>
+
+      <article class="card wide" id="badges">
+        <header class="card-head">
+          <span class="card-ico" aria-hidden="true">🎖️</span>
+          <div>
+            <h2>Badges</h2>
+            <p class="card-sub" id="badgeCount"></p>
+          </div>
+        </header>
+        <div class="badge-grid" id="badgeGrid"></div>
+      </article>
+
+      <article class="card" id="dinos">
+        <header class="card-head">
+          <span class="card-ico" aria-hidden="true">🦖</span>
+          <div>
+            <h2>Votre dino</h2>
+            <p class="card-sub">Débloquez des couleurs avec votre record</p>
+          </div>
+        </header>
+        <div class="skin-grid" id="skinGrid"></div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Un jeu proposé par <strong>Zoé Dewitte</strong>. Vos scores et badges restent uniquement dans ce navigateur, rien n'est envoyé nulle part.</p>
+    <button class="link-btn" id="resetBtn" type="button">Effacer mes données</button>
+  </footer>
+
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <script src="game.js"></script>
+</body>
+</html>
